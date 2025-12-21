@@ -4,11 +4,11 @@ Track all port allocations to avoid conflicts.
 
 ## Core Services
 
-| Service | Port | Path | Tech | Status |
-|---------|------|------|------|--------|
-| Homepage | 4321 | `/` | Astro | Active |
-| API | 8080 | `/api/*` | Fastify | Active |
-| ML Demos | 7860 | `/demos/*` | Streamlit | Active |
+| Service | Port (Dev) | Port (Prod) | Path | Tech | Status |
+|---------|------------|-------------|------|------|--------|
+| Homepage | 4321 | 8080 | `/` | Astro + nginx | Active |
+| API | 8000 | 8000 | `/api/*` | FastAPI | Active |
+| ML Demos | 7860 | 7860 | `/demos/*` | Streamlit | Active |
 
 ## Project Containers
 
@@ -22,15 +22,29 @@ Track all port allocations to avoid conflicts.
 
 ## Port Range
 
-- **Core Services**: 4321 (Astro), 7860 (Streamlit), 8080 (Fastify)
+- **Core Services**: 
+  - 4321 (Astro dev server)
+  - 8080 (Astro static via nginx in production)
+  - 8000 (FastAPI)
+  - 7860 (Streamlit)
 - **Projects**: 8001-8099 (99 projects max)
 - **Reserved**: 8100+ for future use
 
-## Notes on Astro Port
+## Port Notes
 
-- **Development**: Port 4321 (Astro default)
-- **Production**: Same port 4321 (consistency across environments)
-- **Why 4321**: Astro's default dev server port
+### Homepage (Astro)
+- **Development**: Port 4321 (Astro dev server)
+- **Production**: Port 8080 (nginx serves static build)
+- **Why different**: Dev server for HMR, nginx for production performance
+
+### API (FastAPI)
+- **All environments**: Port 8000 (FastAPI/uvicorn standard)
+- **Why 8000**: Python web framework convention
+- **Changed from**: 8080 (was Fastify in v1)
+
+### ML Demos (Streamlit)
+- **All environments**: Port 7860 (Streamlit default)
+- **No change**: Consistent across v1 and v2
 
 ## Adding a New Project
 

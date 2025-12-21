@@ -1,8 +1,8 @@
 module.exports = {
   apps: [
     {
-      name: "homepage",
-      cwd: "./apps/homepage",
+      name: "web",
+      cwd: "./apps/web",
       script: "npm",
       args: "run dev -- --host 0.0.0.0",  // Astro uses port 4321 by default
       env: {
@@ -14,11 +14,10 @@ module.exports = {
     {
       name: "api",
       cwd: "./apps/api",
-      script: "npm",
-      args: "run dev",
+      script: "uvicorn",
+      args: "app.main:app --reload --host 0.0.0.0 --port 8000",
       env: {
-        PORT: "8080",
-        NODE_ENV: "development"
+        ENVIRONMENT: "development"
       },
       watch: false,
       autorestart: true

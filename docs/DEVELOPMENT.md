@@ -41,8 +41,8 @@ cp .env.example .env.local
 # Edit .env.local with your values
 
 # 4. Install dependencies (once apps are created)
-cd apps/homepage && npm install && cd ../..  # Astro + dependencies
-cd apps/api && npm install && cd ../..      # Fastify + dependencies
+cd apps/web && npm install && cd ../..  # Astro + dependencies
+cd apps/api && python -m venv venv && source venv/bin/activate && pip install -r requirements.txt && cd ../..  # FastAPI
 cd apps/demos && python -m venv venv && source venv/bin/activate && pip install -r requirements.txt && cd ../..
 ```
 
@@ -68,8 +68,8 @@ pm2 stop all
 
 **Access:**
 - Homepage: http://localhost:4321 (Astro dev server)
-- API: http://localhost:8080/api/health
-- Demos: http://localhost:7860
+- API: http://localhost:8000/api/health (FastAPI)
+- Demos: http://localhost:7860 (Streamlit)
 
 **Pros**: ✅ Fast, ✅ Hot reload (Astro HMR), ✅ Easy debugging  
 **Cons**: ❌ Not production-parity

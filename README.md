@@ -33,7 +33,7 @@ https://yourdomain.com/
 
 **Tech Stack:**
 - **Frontend**: Astro, TypeScript, React Islands, Tailwind CSS
-- **Backend**: Node.js, Fastify, TypeScript
+- **Backend**: Python, FastAPI, Pydantic (Python-first stack)
 - **ML Demos**: Python, Streamlit
 - **Infrastructure**: GCP Compute Engine VM + Docker Compose + Nginx
 - **CI/CD**: GitHub Actions (SSH deployment)
@@ -121,8 +121,8 @@ pm2 stop all
 
 **Access:**
 - Homepage: http://localhost:4321 (Astro dev server)
-- API: http://localhost:8080/api/health
-- Demos: http://localhost:7860
+- API: http://localhost:8000/api/health (FastAPI)
+- Demos: http://localhost:7860 (Streamlit)
 
 **Pros:** ✅ Fast startup, ✅ Hot reload, ✅ Easy debugging  
 **Cons:** ❌ Not production-parity
@@ -287,7 +287,7 @@ See [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) for detailed rationale on:
 - Why microservices (homepage/API/demos/projects) vs monolith
 - Why monorepo vs multiple repos
 - **Why Astro vs Vite/React/Next.js** (zero JS by default, perfect SEO, 100 Lighthouse)
-- Why Fastify vs FastAPI
+- **Why FastAPI vs Fastify/Express** (Python-first stack, type safety, ML integration)
 - Why Streamlit vs Gradio
 - **Why path routing vs subdomains** (single domain, better SEO, easier SSL)
 - **Why Compute Engine VM vs Cloud Run** (full control, future flexibility)

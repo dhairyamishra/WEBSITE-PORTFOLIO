@@ -3,14 +3,10 @@
 version: '3.8'
 
 services:
-  homepage:
-    build:
-      context: ./apps/homepage
-      dockerfile: Dockerfile
+  web:
+    image: REGION-docker.pkg.dev/PROJECT/portfolio/web:latest
     ports:
-      - "4321:4321"  # Astro production server
-    environment:
-      - NODE_ENV=production
+      - "127.0.0.1:8080:8080"  # Astro static served by nginx
     restart: unless-stopped
     logging:
       driver: "json-file"
@@ -19,18 +15,14 @@ services:
         max-file: "3"
 
   api:
-    build:
-      context: ./apps/api
-      dockerfile: Dockerfile
+    image: REGION-docker.pkg.dev/PROJECT/portfolio/api:latest
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8000:8000"  # FastAPI
     environment:
-      - NODE_ENV=production
-      - PORT=8080
+      - ENVIRONMENT=production
     env_file:
-      - .env  # Production environment variables (on VM)
+      - /etc/portfolio/.env
     volumes:
-      # Mount persistent disk for uploads
       - /mnt/data/uploads:/app/uploads
     restart: unless-stopped
     logging:
@@ -40,15 +32,11 @@ services:
         max-file: "3"
 
   demos:
-    build:
-      context: ./apps/demos
-      dockerfile: Dockerfile
+    image: REGION-docker.pkg.dev/PROJECT/portfolio/demos:latest
     ports:
-      - "7860:7860"
-    environment:
-      - PORT=7860
+      - "127.0.0.1:7860:7860"  # Streamlit
     volumes:
-      # Mount persistent disk (read-only for models/datasets, read-write for outputs)
+      # Mount persistent disk data directories (read-only for models/datasets)
       - /mnt/data/models:/app/models:ro
       - /mnt/data/datasets:/app/datasets:ro
       - /mnt/data/outputs:/app/outputs:rw

@@ -3,17 +3,17 @@
 version: '3.8'
 
 services:
-  homepage:
+  web:
     build:
-      context: ./apps/homepage
-      dockerfile: Dockerfile
+      context: ./apps/web
+      dockerfile: Dockerfile.dev
     ports:
       - "4321:4321"  # Astro dev server
     environment:
       - NODE_ENV=development
     volumes:
       # Mount source code for hot reload (development only)
-      - ./apps/homepage/src:/app/src
+      - ./apps/web/src:/app/src
     restart: unless-stopped
 
   api:
@@ -21,17 +21,15 @@ services:
       context: ./apps/api
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8000:8000"  # FastAPI
     environment:
-      - NODE_ENV=development
-      - PORT=8080
+      - ENVIRONMENT=development
+      - RELOAD=true
     env_file:
-      - .env.local  # Local environment variables
+      - .env.local
     volumes:
       # Mount source code for hot reload
-      - ./apps/api/src:/app/src
-      # Mount local data directory (if it exists)
-      - ./data/uploads:/app/uploads
+      - ./apps/api:/app
     restart: unless-stopped
 
   demos:

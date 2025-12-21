@@ -13,24 +13,27 @@ HTTPS (yourdomain.com) → Compute Engine VM
      ↓
 Nginx (reverse proxy)
      ↓
-     ├─→ /                        → homepage (port 4321) [Astro]
-     ├─→ /api/*                   → api (port 8080) [Fastify]
+     ├─→ /                        → homepage (port 8080) [Astro static + nginx]
+     ├─→ /api/*                   → api (port 8000) [FastAPI]
      ├─→ /demos/*                 → ml-demos (port 7860) [Streamlit]
-     └─→ /projects/[name]/*       → project-* (port 800X) [Various]
+     └─→ /projects/[name]/*       → project-* (port 8001+) [Various]
 ```
 
 ## Service Responsibilities
 
-### Homepage (Port 4321)
+### Homepage (Port 8080 in production, 4321 in dev)
 - **Tech**: Astro + TypeScript (with React islands)
 - **Purpose**: Resume/overview with project gallery
 - **Key Features**: Static HTML pages, React islands for interactivity (contact form, filters)
+- **Production**: Astro builds to static files, served by nginx container on port 8080
+- **Development**: Astro dev server on port 4321
 - **Why Astro**: Zero JS by default, perfect SEO, 100 Lighthouse scores, faster than SPAs
 
-### API (Port 8080)
-- **Tech**: Node.js + Fastify + TypeScript
+### API (Port 8000)
+- **Tech**: Python + FastAPI + Pydantic
 - **Purpose**: Backend logic and integrations
 - **Endpoints**: `/api/health`, `/api/contact`
+- **Why FastAPI**: Python-first stack, excellent validation, async support, consistent with ML demos
 
 ### ML Demos (Port 7860)
 - **Tech**: Python + Streamlit
@@ -57,6 +60,15 @@ Nginx (reverse proxy)
 - **React Islands**: Interactive components only where needed (contact form, filters)
 - **Content-First**: Built for portfolios, blogs, and marketing sites
 - **Fast Builds**: Much faster than Vite for static content
+- **Production**: Build to static files, serve with nginx in container
+
+### Why FastAPI for Backend?
+- **Python-First Stack**: Consistent with Streamlit and ML demos
+- **Type Safety**: Pydantic for automatic request/response validation
+- **Performance**: Async support, comparable to Node.js frameworks
+- **Developer Experience**: Clean routing, automatic API docs (Swagger/ReDoc)
+- **ML Ecosystem**: Easy integration with Python ML libraries
+- **Modern**: Built on modern Python standards (type hints, async/await)
 
 ### Why Monorepo?
 - Single source of truth for all services
@@ -78,15 +90,15 @@ Nginx (reverse proxy)
 
 ## Port Allocation
 
-| Service | Port | Path |
-|---------|------|------|
-| Homepage | 4321 | `/` |
-| API | 8080 | `/api/*` |
-| ML Demos | 7860 | `/demos/*` |
-| Project 1 | 8001 | `/projects/chatbot/*` |
-| Project 2 | 8002 | `/projects/cv-app/*` |
-| Project 3 | 8003 | `/projects/game/*` |
-| Project N | 800X | `/projects/[name]/*` |
+| Service | Port | Path | Tech |
+|---------|------|------|------|
+| Homepage | 8080 | `/` | Astro static + nginx |
+| API | 8000 | `/api/*` | FastAPI |
+| ML Demos | 7860 | `/demos/*` | Streamlit |
+| Project 1 | 8001 | `/projects/chatbot/*` | Various |
+| Project 2 | 8002 | `/projects/cv-app/*` | Various |
+| Project 3 | 8003 | `/projects/game/*` | Various |
+| Project N | 800X | `/projects/[name]/*` | Various |
 
 **Note**: Document port allocations in `PORTS.md` to avoid conflicts.
 
