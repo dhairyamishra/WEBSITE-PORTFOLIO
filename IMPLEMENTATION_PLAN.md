@@ -1,62 +1,27 @@
 # Portfolio Website Implementation Plan
-## Full-Stack Web + API + Streamlit ML Demos on GCP
 
 **Last Updated:** December 20, 2025  
-**Target Platform:** Google Cloud Platform (Cloud Run + HTTPS Load Balancer)  
-**Architecture:** Microservices in Monorepo
+**Architecture:** Microservices in Monorepo  
+**Deployment:** GCP Compute Engine VM + Docker Compose + Nginx
 
 ---
 
-## Executive Summary
+## Quick Links
 
-### Project Goals
-- **Fast, professional portfolio website** showcasing projects, experience, and skills
-- **Interactive ML demos** using Streamlit for hands-on demonstrations
-- **Production-grade API** for contact forms with spam prevention
-- **Clean CI/CD pipeline** from GitHub to Google Cloud Platform
-- **Single domain** with path-based routing (no CORS issues)
-
-### Key Design Decisions
-✅ **Microservices architecture** within a single monorepo  
-✅ **Path-based routing** on one domain:
-   - `/` → Web frontend (React)
-   - `/api/*` → Backend API (Fastify)
-   - `/demos/*` → ML demos (Streamlit)  
-✅ **CORS-free by design** - frontend uses relative paths  
-✅ **Cloud Run + HTTPS Load Balancer** for serverless, scalable deployment  
-✅ **PM2 for local development** - one command to run all services  
-✅ **Docker for production parity** - containers match production environment
+- **[Architecture](./docs/ARCHITECTURE.md)** - System design and decisions
+- **[Development](./docs/DEVELOPMENT.md)** - Local development guide
+- **[Deployment](./docs/DEPLOYMENT.md)** - GCP deployment guide
+- **[Adding Projects](./docs/ADDING_PROJECTS.md)** - How to add new projects
 
 ---
 
-## Architecture Overview
+## Project Goals
 
-### System Architecture
-```
-User Browser
-     ↓
-HTTPS Load Balancer (yourdomain.com)
-     ↓
-     ├─→ / (root)          → Cloud Run: portfolio-web (React + Nginx)
-     ├─→ /api/*            → Cloud Run: portfolio-api (Fastify)
-     └─→ /demos/*          → Cloud Run: portfolio-demos (Streamlit)
-```
-
-### Service Responsibilities
-
-**A) Web Service (Frontend)**
-- Technology: Vite + React + TypeScript
-- Pages: Home, About, Experience, Projects, Contact
-- Calls `/api/contact` using relative paths (no CORS)
-
-**B) API Service (Backend)**
-- Technology: Node.js + Fastify + TypeScript
-- Endpoints: `/api/health`, `/api/contact`
-- Features: Rate limiting, spam prevention, email delivery
-
-**C) Demos Service (ML Demos)**
-- Technology: Python + Streamlit
-- Multiple interactive ML demos with educational content
+- **Portfolio Platform**: Homepage + individual project containers
+- **Production-Grade**: Security, monitoring, CI/CD
+- **ML-Ready**: Persistent storage for models and datasets
+- **Developer-Friendly**: Fast local dev (PM2) + production parity (Docker)
+- **Cost-Effective**: ~$32-58/month on GCP
 
 ---
 
@@ -65,233 +30,317 @@ HTTPS Load Balancer (yourdomain.com)
 ```
 portfolio/
 ├── apps/
-│   ├── web/                      # Frontend (Vite + React + TS)
-│   │   ├── src/
-│   │   ├── public/
-│   │   ├── Dockerfile
-│   │   ├── nginx.conf
-│   │   └── package.json
-│   ├── api/                      # Backend (Fastify + TS)
-│   │   ├── src/
-│   │   ├── Dockerfile
-│   │   └── package.json
-│   └── demos/                    # ML Demos (Streamlit)
-│       ├── app.py
-│       ├── demos/
-│       ├── Dockerfile
-│       └── requirements.txt
-├── .github/workflows/
-│   └── deploy-cloudrun.yml       # CI/CD pipeline
-├── docker-compose.yml            # Local integration testing
-├── ecosystem.config.cjs          # PM2 configuration
+│   ├── homepage/          # Portfolio homepage (React)
+│   ├── api/               # Backend API (Fastify)
+│   ├── demos/             # ML Demos (Streamlit)
+│   └── projects/          # Individual project containers
+│       ├── _template/     # Project template
+│       ├── chatbot/       # Example: AI Chatbot
+│       ├── cv-analyzer/   # Example: CV App
+│       └── realtime-game/ # Example: Game
+├── docs/                  # Documentation (this directory)
+│   ├── ARCHITECTURE.md
+│   ├── DEVELOPMENT.md
+│   ├── DEPLOYMENT.md
+│   └── ADDING_PROJECTS.md
+├── configs/               # Shared configurations
+│   ├── nginx.conf         # Nginx reverse proxy config
+│   ├── .eslintrc.js       # Shared ESLint config
+│   └── tsconfig.base.json # Shared TypeScript config
+├── scripts/               # Utility scripts
+│   ├── setup-local.sh     # Local environment setup
+│   ├── deploy.sh          # Deployment script
+│   └── add-project.sh     # New project scaffolding
+├── data/                  # Data directory (gitignored)
+├── .github/workflows/     # CI/CD pipelines
+├── docker-compose.yml     # Local development
+├── docker-compose.prod.yml # Production deployment
+├── ecosystem.config.cjs   # PM2 configuration
+├── .env.example           # Environment variables template
+├── .gitignore
 ├── README.md
-└── IMPLEMENTATION_PLAN.md        # This file
+├── PORTS.md               # Port allocation tracking
+└── IMPLEMENTATION_PLAN.md # This file
 ```
 
 ---
 
 ## Implementation Phases
 
-See detailed breakdown in sections below.
+### Phase 1: Foundation (Week 1)
+**Goal**: Set up development environment and core structure
+
+- [ ] Initialize monorepo structure
+- [ ] Set up Git repository with `.gitignore`
+- [ ] Create shared configs (`configs/`)
+- [ ] Set up PM2 configuration
+- [ ] Create docker-compose files
+- [ ] Document port allocations (`PORTS.md`)
+- [ ] Test environment setup
+
+**Deliverable**: Working local development environment
 
 ---
 
-## Complete Task Checklist
+### Phase 2: Homepage (Week 2)
+**Goal**: Build portfolio homepage
 
-### Phase 1: Local Development Environment
-- [ ] Create monorepo directory structure
-- [ ] Initialize Git repository and `.gitignore`
-- [ ] Initialize web app (Vite + React + TypeScript)
-- [ ] Initialize API app (Node + Fastify + TypeScript)
-- [ ] Initialize demos app (Python + Streamlit)
-- [ ] Create `ecosystem.config.cjs` for PM2
-- [ ] Test all services run locally via PM2
+- [ ] Initialize Astro + TypeScript
+- [ ] Set up Tailwind CSS + design system (Astro integration)
+- [ ] Implement pages:
+  - [ ] `src/pages/index.astro` - Home (hero, skills, featured projects)
+  - [ ] `src/pages/projects/index.astro` - Projects gallery
+  - [ ] `src/pages/about.astro` - About (bio, experience)
+  - [ ] `src/pages/contact.astro` - Contact page
+- [ ] Create Astro components:
+  - [ ] `ProjectCard.astro` - Static project cards
+  - [ ] `ContactForm.tsx` - React island (client:load)
+  - [ ] `ProjectFilter.tsx` - React island (client:visible)
+- [ ] Add SEO (meta tags, sitemap, robots.txt) - Built into Astro
+- [ ] Optimize performance (Lighthouse 100 target) - Zero JS by default
+- [ ] Set up content collections for projects
+- [ ] Create Dockerfile
 
-### Phase 2: Web Frontend
-- [ ] Set up design system (Tailwind CSS)
-- [ ] Implement Home, About, Experience, Projects, Contact pages
-- [ ] Add SEO (meta tags, sitemap, robots.txt)
-- [ ] Optimize images and performance (Lighthouse > 90)
-- [ ] Integrate contact form with API
+**Deliverable**: Functional homepage with project gallery
 
-### Phase 3: Backend API
-- [ ] Implement `/api/health` and `/api/contact` endpoints
-- [ ] Add rate limiting (5 requests per 15 min)
-- [ ] Implement honeypot spam prevention
-- [ ] Integrate SendGrid/Mailgun for email
-- [ ] Add input validation and logging
+---
 
-### Phase 4: Streamlit ML Demos
-- [ ] Create main app with sidebar navigation
-- [ ] Implement 2-3 interactive demos
-- [ ] Add educational content (How It Works, Limitations)
-- [ ] Optimize startup time (< 10 seconds)
-- [ ] Ensure listens on `0.0.0.0:$PORT`
+### Phase 3: API (Week 2-3)
+**Goal**: Build backend API
 
-### Phase 5: Containerization
-- [ ] Create Dockerfiles for web, API, demos
-- [ ] Create `docker-compose.yml`
-- [ ] Test `docker-compose up --build`
+- [ ] Initialize Fastify + TypeScript
+- [ ] Implement endpoints:
+  - [ ] `GET /api/health`
+  - [ ] `POST /api/contact`
+- [ ] Add validation (JSON schema)
+- [ ] Implement rate limiting (5 req/15min per IP)
+- [ ] Add honeypot spam prevention
+- [ ] Integrate email service (SendGrid/Mailgun)
+- [ ] Set up environment variables
+- [ ] Add logging (no PII)
+- [ ] Create Dockerfile
 
-### Phase 6: GCP Foundation
-- [ ] Create GCP project and enable APIs
-- [ ] Create Artifact Registry repository
-- [ ] Set up Secret Manager
-- [ ] Configure Workload Identity Federation for GitHub
+**Deliverable**: Working API with contact form integration
 
-### Phase 7: Cloud Run Deployment
-- [ ] Build and push container images
-- [ ] Deploy all three services to Cloud Run
-- [ ] Test each Cloud Run URL
+---
 
-### Phase 8: HTTPS Load Balancer
-- [ ] Create serverless NEGs and backend services
-- [ ] Create URL map with path routing
-- [ ] Reserve static IP and create SSL certificate
-- [ ] Create HTTPS proxy and forwarding rules
-- [ ] Update DNS and verify routing
+### Phase 4: ML Demos (Week 3)
+**Goal**: Build Streamlit demos
 
-### Phase 9: CI/CD
-- [ ] Create GitHub Actions workflow
-- [ ] Configure change detection
-- [ ] Add smoke tests
-- [ ] Test deployment pipeline
+- [ ] Initialize Streamlit app
+- [ ] Create demo structure (sidebar + tabs)
+- [ ] Implement 2-3 demos:
+  - [ ] Demo 1: [Your choice]
+  - [ ] Demo 2: [Your choice]
+  - [ ] Demo 3: [Your choice]
+- [ ] Add educational content (How it works, Limitations)
+- [ ] Optimize startup time
+- [ ] Configure for containerization
+- [ ] Create Dockerfile
 
-### Phase 10: Production Hardening
-- [ ] Set up uptime checks and alerts
-- [ ] Configure budget alerts
-- [ ] Add security headers
+**Deliverable**: Interactive ML demos
+
+---
+
+### Phase 5: Containerization (Week 4)
+**Goal**: Prepare for deployment
+
+- [ ] Finalize all Dockerfiles
+- [ ] Test `docker-compose.yml` locally
+- [ ] Create `docker-compose.prod.yml`
+- [ ] Configure volume mounts
+- [ ] Test end-to-end locally
+- [ ] Document any issues
+
+**Deliverable**: Fully containerized application
+
+---
+
+### Phase 6: GCP Setup (Week 4-5)
+**Goal**: Set up production infrastructure
+
+- [ ] Create GCP project
+- [ ] Create VM (e2-medium, Ubuntu 22.04)
+- [ ] Reserve static IP
+- [ ] Create persistent disk (100GB)
+- [ ] Attach and mount disk
+- [ ] Configure firewall rules
+- [ ] Set up SSH access
+- [ ] Install Docker + Docker Compose
+- [ ] Clone repository to VM
+
+**Deliverable**: Production VM ready for deployment
+
+**Reference**: [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)
+
+---
+
+### Phase 7: Nginx & SSL (Week 5)
+**Goal**: Configure reverse proxy and HTTPS
+
+- [ ] Install Nginx
+- [ ] Configure reverse proxy (see `configs/nginx.conf`)
+- [ ] Install Certbot
+- [ ] Obtain SSL certificate
+- [ ] Configure auto-renewal
+- [ ] Test HTTPS redirect
+
+**Deliverable**: HTTPS-enabled reverse proxy
+
+**Reference**: [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md#3-configure-nginx)
+
+---
+
+### Phase 8: Deployment (Week 5)
+**Goal**: Deploy to production
+
+- [ ] Create production `.env`
+- [ ] Deploy with docker-compose
+- [ ] Verify all services running
+- [ ] Test end-to-end
+- [ ] Update DNS
+
+**Deliverable**: Live production site
+
+---
+
+### Phase 9: CI/CD (Week 6)
+**Goal**: Automate deployments
+
+- [ ] Set up SSH key for GitHub Actions
+- [ ] Create deployment workflow
+- [ ] Add health checks
+- [ ] Test automated deployment
 - [ ] Document rollback procedure
-- [ ] Optimize Cloud Run settings
 
-### Phase 11: Launch
-- [ ] Write documentation
-- [ ] Perform security and performance audits
-- [ ] Test entire user flow
-- [ ] Launch! 🚀
+**Deliverable**: Automated deployment pipeline
+
+**Reference**: [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md#cicd-with-github-actions)
 
 ---
 
-## Key Technical Details
+### Phase 10: Hardening (Week 6)
+**Goal**: Production security and monitoring
 
-### PM2 Configuration (`ecosystem.config.cjs`)
-```javascript
-module.exports = {
-  apps: [
-    {
-      name: "portfolio-web",
-      cwd: "./apps/web",
-      script: "npm",
-      args: "run dev -- --host 0.0.0.0 --port 5173"
-    },
-    {
-      name: "portfolio-api",
-      cwd: "./apps/api",
-      script: "npm",
-      args: "run dev",
-      env: { PORT: "8080" }
-    },
-    {
-      name: "portfolio-demos",
-      cwd: "./apps/demos",
-      script: "streamlit",
-      args: "run app.py --server.address 0.0.0.0 --server.port 7860"
-    }
-  ]
-};
+- [ ] Configure UFW firewall
+- [ ] Install fail2ban
+- [ ] Set up unattended-upgrades
+- [ ] Configure log rotation
+- [ ] Set up monitoring (uptime, disk space)
+- [ ] Create backup strategy
+- [ ] Perform security audit
+
+**Deliverable**: Hardened production environment
+
+**Reference**: [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md#production-hardening)
+
+---
+
+### Phase 11: Launch (Week 7)
+**Goal**: Go live!
+
+- [ ] Final testing (all user flows)
+- [ ] Performance audit (Lighthouse)
+- [ ] Security audit
+- [ ] Update documentation
+- [ ] Announce launch
+- [ ] Monitor for issues
+
+**Deliverable**: 🚀 Live portfolio website!
+
+---
+
+## Development Workflow
+
+```
+1. Local Development (PM2)
+   - Fast iteration
+   - Hot reload
+   ↓
+2. Local Testing (Docker)
+   - Production parity
+   - Integration testing
+   ↓
+3. Commit & Push
+   - Code review (if team)
+   - CI checks
+   ↓
+4. Deploy (CI/CD or Manual)
+   - Automated via GitHub Actions
+   - Or manual: SSH → pull → rebuild
+   ↓
+5. Monitor
+   - Check logs
+   - Verify functionality
 ```
 
-### Docker Commands
+**Reference**: [docs/DEVELOPMENT.md](./docs/DEVELOPMENT.md)
+
+---
+
+## Quick Commands
+
+### Local Development
 ```bash
-# Build and push images
-docker build -t ${REPO}/portfolio-web:latest ./apps/web
-docker push ${REPO}/portfolio-web:latest
+# PM2 (fast)
+pm2 start ecosystem.config.cjs
+pm2 logs
 
-# Local integration testing
-docker-compose up --build
+# Docker (production parity)
+docker compose up --build
 ```
 
-### Cloud Run Deployment
+### Production
 ```bash
-# Deploy service
-gcloud run deploy portfolio-web \
-  --image=${REPO}/portfolio-web:latest \
-  --region=$REGION \
-  --allow-unauthenticated \
-  --memory=512Mi \
-  --max-instances=10
+# Deploy
+docker compose -f docker-compose.prod.yml up -d --build
+
+# Logs
+docker compose -f docker-compose.prod.yml logs -f
+
+# Restart service
+docker compose -f docker-compose.prod.yml restart api
 ```
 
-### Load Balancer Path Routing
+### Adding Projects
 ```bash
-# Create URL map with path rules
-gcloud compute url-maps create portfolio-url-map \
-  --default-service=portfolio-web-backend
+# Use template
+cp -r apps/projects/_template apps/projects/my-project
 
-gcloud compute url-maps add-path-matcher portfolio-url-map \
-  --path-matcher-name=main-matcher \
-  --default-service=portfolio-web-backend \
-  --path-rules="/api/*=portfolio-api-backend,/demos/*=portfolio-demos-backend"
+# Or use script
+./scripts/add-project.sh my-project
 ```
 
----
-
-## Cost Estimate
-
-### Cloud Run Deployment (Recommended)
-- Cloud Run (3 services): $0-5/month (scales to zero)
-- HTTPS Load Balancer: $18-25/month (fixed cost)
-- Artifact Registry: $0-2/month
-- Secret Manager: $0-1/month
-- **Total: ~$20-35/month** (low traffic)
-
-### VM Deployment (Alternative)
-- Compute Engine (e2-medium): $25-30/month
-- Static IP: $3/month
-- **Total: ~$28-33/month** (predictable)
+**Reference**: [docs/ADDING_PROJECTS.md](./docs/ADDING_PROJECTS.md)
 
 ---
 
-## Security Checklist
+## Key Files
 
-- [ ] HTTPS enforced (HTTP → HTTPS redirect)
-- [ ] Security headers (CSP, X-Frame-Options, etc.)
-- [ ] Secrets in Secret Manager (not in code)
-- [ ] Input validation on all endpoints
-- [ ] Rate limiting prevents abuse
-- [ ] No PII in logs
-- [ ] Honeypot spam prevention
-
----
-
-## Monitoring & Alerts
-
-- [ ] Uptime checks for web and API
-- [ ] Alert policies for errors and downtime
-- [ ] Budget alerts (50%, 90%, 100%)
-- [ ] Cloud Monitoring dashboard
-
----
-
-## Rollback Procedure
-
-```bash
-# List revisions
-gcloud run revisions list --service=portfolio-web --region=$REGION
-
-# Rollback to previous revision
-gcloud run services update-traffic portfolio-web \
-  --to-revisions=portfolio-web-00004-xyz=100 \
-  --region=$REGION
-```
+| File | Purpose |
+|------|---------|
+| `ecosystem.config.cjs` | PM2 configuration for local dev |
+| `docker-compose.yml` | Local Docker environment |
+| `docker-compose.prod.yml` | Production Docker environment |
+| `.env.example` | Environment variables template |
+| `configs/nginx.conf` | Nginx reverse proxy config |
+| `PORTS.md` | Port allocation tracking |
 
 ---
 
 ## Next Steps
 
-1. **Review this plan** and confirm alignment with your goals
-2. **Start with Phase 1**: Set up local development environment
-3. **Iterate quickly**: Build → Test → Deploy
-4. **Ask questions**: Clarify any unclear sections
+1. **Review Architecture**: Read [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)
+2. **Set Up Environment**: Follow [docs/DEVELOPMENT.md](./docs/DEVELOPMENT.md)
+3. **Start Phase 1**: Initialize monorepo structure
+4. **Build Iteratively**: Complete one phase at a time
 
-Ready to start implementation? Let's build this! 🚀
+---
+
+## Support
+
+- **Documentation**: See `docs/` directory
+- **Issues**: Use GitHub Issues
+- **Questions**: Create a discussion
+
+Ready to build? Let's start with Phase 1! 🚀

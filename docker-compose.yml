@@ -1,0 +1,76 @@
+# docker-compose.yml - Local Development (Production Parity Testing)
+# Use this to test the containerized environment locally before deploying to GCP
+version: '3.8'
+
+services:
+  homepage:
+    build:
+      context: ./apps/homepage
+      dockerfile: Dockerfile
+    ports:
+      - "4321:4321"  # Astro dev server
+    environment:
+      - NODE_ENV=development
+    volumes:
+      # Mount source code for hot reload (development only)
+      - ./apps/homepage/src:/app/src
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+    env_file:
+      - .env.local  # Local environment variables
+    volumes:
+      # Mount source code for hot reload
+      - ./apps/api/src:/app/src
+      # Mount local data directory (if it exists)
+      - ./data/uploads:/app/uploads
+    restart: unless-stopped
+
+  demos:
+    build:
+      context: ./apps/demos
+      dockerfile: Dockerfile
+    ports:
+      - "7860:7860"
+    environment:
+      - PORT=7860
+    volumes:
+      # Mount source code for hot reload
+      - ./apps/demos:/app
+      # Mount local data directories
+      - ./data/models:/app/models:ro
+      - ./data/datasets:/app/datasets:ro
+      - ./data/outputs:/app/outputs:rw
+    restart: unless-stopped
+
+  # Example project container (uncomment when you have projects)
+  # project-chatbot:
+  #   build:
+  #     context: ./apps/projects/chatbot
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8001:8000"
+  #   volumes:
+  #     - ./data/models/nlp:/app/models:ro
+  #     - ./data/outputs/chatbot:/app/outputs:rw
+  #   restart: unless-stopped
+
+# Optional: Local nginx for testing path routing
+  # nginx:
+  #   image: nginx:alpine
+  #   ports:
+  #     - "80:80"
+  #   volumes:
+  #     - ./nginx-local.conf:/etc/nginx/conf.d/default.conf
+  #   depends_on:
+  #     - homepage
+  #     - api
+  #     - demos

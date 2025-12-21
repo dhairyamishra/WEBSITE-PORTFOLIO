@@ -55,12 +55,29 @@ coverage/
 *.tfstate
 *.tfstate.backup
 
-# ML Models (if large)
+# Data directory (persistent disk mount)
+data/
+
+# ML Models (large files)
 *.h5
 *.pkl
 *.pth
 *.onnx
-models/*.bin
+*.bin
+*.safetensors
+models/
+checkpoints/
+
+# Datasets
+datasets/
+*.csv
+*.tsv
+*.parquet
+
+# Outputs
+outputs/
+generated/
+uploads/
 
 # OS
 Thumbs.db

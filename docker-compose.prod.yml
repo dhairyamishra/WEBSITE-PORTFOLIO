@@ -1,0 +1,109 @@
+# docker-compose.prod.yml - Production Deployment on GCP VM
+# This is the configuration used on the VM with persistent disk mounts
+version: '3.8'
+
+services:
+  homepage:
+    build:
+      context: ./apps/homepage
+      dockerfile: Dockerfile
+    ports:
+      - "4321:4321"  # Astro production server
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+    env_file:
+      - .env  # Production environment variables (on VM)
+    volumes:
+      # Mount persistent disk for uploads
+      - /mnt/data/uploads:/app/uploads
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  demos:
+    build:
+      context: ./apps/demos
+      dockerfile: Dockerfile
+    ports:
+      - "7860:7860"
+    environment:
+      - PORT=7860
+    volumes:
+      # Mount persistent disk (read-only for models/datasets, read-write for outputs)
+      - /mnt/data/models:/app/models:ro
+      - /mnt/data/datasets:/app/datasets:ro
+      - /mnt/data/outputs:/app/outputs:rw
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Individual Project Containers
+  # Uncomment and configure as you add projects
+
+  # project-chatbot:
+  #   build:
+  #     context: ./apps/projects/chatbot
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8001:8000"
+  #   volumes:
+  #     - /mnt/data/models/nlp:/app/models:ro
+  #     - /mnt/data/outputs/chatbot:/app/outputs:rw
+  #   restart: unless-stopped
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+
+  # project-cv-app:
+  #   build:
+  #     context: ./apps/projects/cv-analyzer
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8002:8501"
+  #   volumes:
+  #     - /mnt/data/models/cv:/app/models:ro
+  #     - /mnt/data/datasets/images:/app/datasets:ro
+  #     - /mnt/data/outputs/cv-app:/app/outputs:rw
+  #   restart: unless-stopped
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+
+  # project-game:
+  #   build:
+  #     context: ./apps/projects/realtime-game
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8003:3000"
+  #   restart: unless-stopped
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
