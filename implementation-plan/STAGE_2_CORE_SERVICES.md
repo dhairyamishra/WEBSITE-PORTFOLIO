@@ -1343,13 +1343,13 @@ streamlit run app.py --server.port 7860 --server.baseUrlPath demos
 
 By the end of Stage 2, you should have:
 
-- [ ] Astro website with all core pages (Home, About, Projects, Contact)
-- [ ] Navigation component working across all pages
-- [ ] Contact form (React island) implemented
-- [ ] FastAPI backend with health and contact endpoints
-- [ ] Anti-spam measures (honeypot, rate limiting)
-- [ ] Email delivery configured (SendGrid/Mailgun)
-- [ ] Streamlit demos with 2+ interactive examples
+- [x] Astro website with all core pages (Home, About, Projects, Contact)
+- [x] Navigation component working across all pages
+- [x] Contact form (React island) implemented
+- [x] FastAPI backend with health and contact endpoints
+- [x] Anti-spam measures (honeypot, rate limiting)
+- [x] Email delivery configured (SendGrid/Mailgun)
+- [x] Streamlit demos with 2+ interactive examples
 - [ ] All services tested locally and working independently
 
 ---
