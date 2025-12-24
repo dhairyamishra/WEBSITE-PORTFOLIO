@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: 59 130 246; /* blue-500 */
+    --color-secondary: 139 92 246; /* violet-500 */
+    --color-accent: 236 72 153; /* pink-500 */
+    --color-background: 255 255 255;
+    --color-text: 15 23 42; /* slate-900 */
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-background: 15 23 42; /* slate-900 */
+      --color-text: 248 250 252; /* slate-50 */
+    }
+  }
+
+  body {
+    @apply bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50;
+    @apply transition-colors duration-200;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg;
+    @apply transition-colors duration-200 font-medium;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 border-2 border-blue-500 text-blue-500 hover:bg-blue-50;
+    @apply dark:hover:bg-blue-950 rounded-lg transition-colors duration-200 font-medium;
+  }
+
+  .card {
+    @apply bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6;
+    @apply border border-slate-200 dark:border-slate-700;
+  }
+}

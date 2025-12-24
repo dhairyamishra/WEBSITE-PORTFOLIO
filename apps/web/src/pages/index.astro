@@ -1,0 +1,70 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+---
+
+<Layout title="Home - Your Name">
+  <Navigation />
+  
+  <main>
+    <!-- Hero Section -->
+    <section class="py-20 px-4">
+      <div class="max-w-7xl mx-auto text-center">
+        <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-500 to-violet-500 bg-clip-text text-transparent">
+          Full-Stack Developer & ML Engineer
+        </h1>
+        <p class="text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto">
+          Building modern web applications and intelligent systems
+        </p>
+        <div class="flex gap-4 justify-center">
+          <a href="/projects" class="btn-primary">View Projects</a>
+          <a href="/contact" class="btn-secondary">Get in Touch</a>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Skills Section -->
+    <section class="py-20 px-4 bg-slate-50 dark:bg-slate-800/50">
+      <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Skills & Technologies</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div class="card text-center">
+            <h3 class="font-semibold mb-2">Frontend</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">React, Astro, TypeScript</p>
+          </div>
+          <div class="card text-center">
+            <h3 class="font-semibold mb-2">Backend</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">Python, FastAPI, Node.js</p>
+          </div>
+          <div class="card text-center">
+            <h3 class="font-semibold mb-2">ML/AI</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">PyTorch, Streamlit, NLP</p>
+          </div>
+          <div class="card text-center">
+            <h3 class="font-semibold mb-2">DevOps</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">Docker, GCP, CI/CD</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Featured Projects Section -->
+    <section class="py-20 px-4">
+      <div class="max-w-7xl mx-auto">
+        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Featured Projects</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <p class="text-center text-slate-600 dark:text-slate-400 col-span-full">
+            Projects coming soon...
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <!-- Footer -->
+  <footer class="py-8 px-4 border-t border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto text-center text-slate-600 dark:text-slate-400">
+      <p>&copy; 2025 Your Name. All rights reserved.</p>
+    </div>
+  </footer>
+</Layout>

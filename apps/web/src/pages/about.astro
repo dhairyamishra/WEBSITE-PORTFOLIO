@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+---
+
+<Layout title="About - Your Name" description="Learn more about my background and experience">
+  <Navigation />
+  
+  <main class="py-20 px-4">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-4xl md:text-5xl font-bold mb-8">About Me</h1>
+      
+      <div class="prose prose-lg dark:prose-invert max-w-none">
+        <p class="text-xl text-slate-600 dark:text-slate-300 mb-6">
+          I'm a full-stack developer and ML engineer passionate about building intelligent, user-friendly applications.
+        </p>
+        
+        <h2 class="text-2xl font-bold mt-12 mb-4">Experience</h2>
+        <div class="space-y-6">
+          <div class="card">
+            <h3 class="font-semibold text-lg">Software Engineer</h3>
+            <p class="text-slate-600 dark:text-slate-400">Company Name • 2023 - Present</p>
+            <p class="mt-2">Description of role and achievements...</p>
+          </div>
+        </div>
+        
+        <h2 class="text-2xl font-bold mt-12 mb-4">Education</h2>
+        <div class="card">
+          <h3 class="font-semibold text-lg">Bachelor of Science in Computer Science</h3>
+          <p class="text-slate-600 dark:text-slate-400">University Name • 2019 - 2023</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
