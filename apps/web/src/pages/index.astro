@@ -1,70 +1,287 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('projects');
+const featuredProjects = allProjects
+  .filter(p => p.data.featured)
+  .sort((a, b) => b.data.date.localeCompare(a.data.date))
+  .slice(0, 3);
+
+const allExperience = await getCollection('experience');
+const experience = allExperience.sort((a, b) => a.data.order - b.data.order);
+
+const skills = [
+  { category: 'Languages', items: ['Python', 'TypeScript', 'JavaScript', 'Java', 'C++', 'SQL', 'HTML/CSS'], color: 'cyan' },
+  { category: 'ML / AI', items: ['PyTorch', 'TensorFlow', 'Hugging Face', 'scikit-learn', 'OpenCV', 'RAG', 'ChromaDB', 'FAISS', 'wandb'], color: 'magenta' },
+  { category: 'Cloud & DevOps', items: ['EC2', 'S3', 'Lambda', 'GKE', 'Docker', 'Kubernetes', 'Terraform', 'GitHub Actions', 'Jenkins', 'ArgoCD'], color: 'violet' },
+  { category: 'Frameworks', items: ['FastAPI', 'React', 'Astro', 'Vite', 'TailwindCSS', 'Streamlit', 'Zustand', 'React Flow'], color: 'cyan' },
+  { category: 'Data & Storage', items: ['PostgreSQL', 'MongoDB', 'MySQL', 'Pandas', 'NumPy', 'Spark', 'HDFS', 'REST APIs'], color: 'magenta' },
+  { category: 'Testing & Observability', items: ['OpenTelemetry', 'Grafana', 'Prometheus', 'Playwright', 'pytest', 'Pydantic'], color: 'violet' },
+];
+
+const stats = [
+  { value: '4+', label: 'Years Experience' },
+  { value: '8+', label: 'Projects Shipped' },
+  { value: 'NYU', label: 'Courant M.S. CS' },
+  { value: 'ICML', label: '2026 Submission' },
+];
 ---
 
-<Layout title="Home - Your Name">
+<Layout title="Dhairya Mishra — Software Engineer & ML Researcher">
   <Navigation />
   
-  <main>
+  <main id="main-content">
     <!-- Hero Section -->
-    <section class="py-20 px-4">
-      <div class="max-w-7xl mx-auto text-center">
-        <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-500 to-violet-500 bg-clip-text text-transparent">
-          Full-Stack Developer & ML Engineer
+    <section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+      <!-- Grid background -->
+      <div class="absolute inset-0 grid-bg opacity-40"></div>
+      <!-- Gradient orbs -->
+      <div class="absolute top-1/4 -left-32 w-96 h-96 bg-neon-cyan/5 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-1/4 -right-32 w-96 h-96 bg-neon-magenta/5 rounded-full blur-3xl"></div>
+
+      <div class="section-container relative z-10 text-center py-20">
+        <div class="animate-fade-in">
+          <p class="text-neon-cyan font-mono text-sm tracking-widest uppercase mb-6">Software Engineer &middot; ML Researcher</p>
+        </div>
+        
+        <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-bold mb-6 leading-tight">
+          <span class="text-gradient-neon">Dhairya</span>
+          <br />
+          <span class="text-text-bright">Mishra</span>
         </h1>
-        <p class="text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto">
-          Building modern web applications and intelligent systems
+        
+        <p class="text-lg md:text-xl text-muted-light max-w-2xl mx-auto mb-10 leading-relaxed">
+          Building AI/ML production systems and full-stack platforms. 
+          4+ years shipping computer vision, NLP, and cloud-native services at scale.
         </p>
-        <div class="flex gap-4 justify-center">
-          <a href="/projects" class="btn-primary">View Projects</a>
-          <a href="/contact" class="btn-secondary">Get in Touch</a>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/projects" class="btn-neon-fill">
+            View Projects
+            <svg class="inline-block w-4 h-4 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+          </a>
+          <a href="/contact" class="btn-neon">Get in Touch</a>
         </div>
       </div>
     </section>
-    
+
+    <!-- Stats Bar -->
+    <section class="relative py-12 border-y border-white/5">
+      <div class="section-container">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {stats.map((stat, i) => (
+            <div class={`reveal reveal-delay-${i + 1} text-center`}>
+              <div class="text-3xl md:text-4xl font-heading font-bold text-gradient-cyan mb-1">{stat.value}</div>
+              <div class="text-sm text-muted">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Projects -->
+    <section class="py-20 md:py-28">
+      <div class="section-container">
+        <div class="reveal text-center mb-14">
+          <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">
+            Featured <span class="text-gradient-cyan">Projects</span>
+          </h2>
+          <p class="text-muted max-w-lg mx-auto">Research and production work spanning ML, full-stack, and cloud systems.</p>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-6">
+          {featuredProjects.map((project, i) => (
+            <a href={`/projects/${project.slug}`} class={`reveal reveal-delay-${i + 1} group card-neon-interactive flex flex-col`}>
+              <!-- Neon top accent bar -->
+              <div class="h-1 w-full rounded-t-xl bg-gradient-to-r from-neon-cyan via-neon-violet to-neon-magenta mb-4 opacity-60 group-hover:opacity-100 transition-opacity"></div>
+              
+              <div class="flex items-start justify-between mb-3">
+                <span class="badge-neon text-[10px]">{project.data.category}</span>
+                {project.data.metric && (
+                  <div class="text-right">
+                    <span class="text-lg font-heading font-bold text-neon-cyan">{project.data.metric}</span>
+                    {project.data.metricLabel && <p class="text-[10px] text-muted">{project.data.metricLabel}</p>}
+                  </div>
+                )}
+              </div>
+              
+              <h3 class="text-lg font-heading font-semibold text-text-bright mb-2 group-hover:text-neon-cyan transition-colors">
+                {project.data.title}
+              </h3>
+              
+              <p class="text-sm text-muted leading-relaxed mb-4 flex-grow">
+                {project.data.description}
+              </p>
+              
+              <div class="flex flex-wrap gap-1.5 mt-auto">
+                {project.data.tags.slice(0, 4).map(tag => (
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-muted-light">{tag}</span>
+                ))}
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <div class="reveal text-center mt-10">
+          <a href="/projects" class="btn-neon text-sm">
+            View All Projects
+            <svg class="inline-block w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider-neon-animated"></div>
+
     <!-- Skills Section -->
-    <section class="py-20 px-4 bg-slate-50 dark:bg-slate-800/50">
-      <div class="max-w-7xl mx-auto">
-        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Skills & Technologies</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div class="card text-center">
-            <h3 class="font-semibold mb-2">Frontend</h3>
-            <p class="text-sm text-slate-600 dark:text-slate-400">React, Astro, TypeScript</p>
+    <section class="py-20 md:py-28">
+      <div class="section-container">
+        <div class="reveal text-center mb-14">
+          <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">
+            Skills & <span class="text-gradient-cyan">Technologies</span>
+          </h2>
+          <p class="text-muted max-w-lg mx-auto">Full-stack proficiency across ML/AI, cloud infrastructure, and modern web frameworks.</p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {skills.map((group, i) => (
+            <div class={`reveal reveal-delay-${(i % 5) + 1} card-neon`}>
+              <h3 class={`text-sm font-heading font-semibold uppercase tracking-wider mb-3 ${
+                group.color === 'cyan' ? 'text-neon-cyan' : group.color === 'magenta' ? 'text-neon-magenta' : 'text-neon-violet'
+              }`}>
+                {group.category}
+              </h3>
+              <div class="flex flex-wrap gap-2">
+                {group.items.map(item => (
+                  <span class={`text-xs px-2.5 py-1 rounded-full border ${
+                    group.color === 'cyan' ? 'bg-neon-cyan/5 text-neon-cyan/80 border-neon-cyan/15' :
+                    group.color === 'magenta' ? 'bg-neon-magenta/5 text-neon-magenta/80 border-neon-magenta/15' :
+                    'bg-neon-violet/5 text-neon-violet/80 border-neon-violet/15'
+                  }`}>
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <div class="divider-neon-animated"></div>
+
+    <!-- Experience Timeline -->
+    <section class="py-20 md:py-28">
+      <div class="section-container">
+        <div class="reveal text-center mb-14">
+          <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">
+            Experience <span class="text-gradient-cyan">Timeline</span>
+          </h2>
+        </div>
+        
+        <div class="relative max-w-3xl mx-auto">
+          <!-- Vertical thread line -->
+          <div class="absolute left-4 md:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-neon-cyan/40 via-neon-violet/30 to-transparent"></div>
+          
+          {experience.map((exp, i) => (
+            <div class={`reveal reveal-delay-${i + 1} relative pl-12 md:pl-20 pb-12 last:pb-0`}>
+              <!-- Dot -->
+              <div class="absolute left-[11px] md:left-[27px] top-1 w-3 h-3 rounded-full bg-neon-cyan shadow-neon-sm border-2 border-base"></div>
+              
+              <div class="card-neon">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                  <h3 class="text-lg font-heading font-semibold text-text-bright">{exp.data.role}</h3>
+                  <span class="text-xs text-muted font-mono">{exp.data.startDate} — {exp.data.endDate}</span>
+                </div>
+                <p class="text-sm text-neon-cyan/70 mb-3">{exp.data.company} &middot; {exp.data.location}</p>
+                <div class="text-sm text-muted leading-relaxed prose-sm">
+                  <Fragment set:html={(await exp.render()).Content ? '' : ''} />
+                </div>
+                <!-- Render bullet points from body -->
+                {(exp.body || '').split('\n').filter(line => line.trim().startsWith('-')).map(line => (
+                  <p class="text-sm text-muted leading-relaxed mt-2 pl-3 border-l border-white/5">
+                    {line.trim().slice(2)}
+                  </p>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <div class="divider-neon-animated"></div>
+
+    <!-- Education -->
+    <section class="py-20 md:py-28">
+      <div class="section-container">
+        <div class="reveal text-center mb-14">
+          <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">
+            <span class="text-gradient-cyan">Education</span>
+          </h2>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+          <div class="reveal reveal-delay-1 card-neon">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-lg bg-neon-violet/10 border border-neon-violet/20 flex items-center justify-center flex-shrink-0">
+                <span class="text-lg font-heading font-bold text-neon-violet">NY</span>
+              </div>
+              <div>
+                <h3 class="font-heading font-semibold text-text-bright">New York University</h3>
+                <p class="text-sm text-neon-cyan/70">Courant Institute</p>
+                <p class="text-sm text-muted mt-1">M.S. Computer Science (AI)</p>
+                <div class="flex items-center gap-3 mt-2 text-xs text-muted">
+                  <span>May 2026</span>
+                  <span class="text-neon-cyan">GPA: 3.7</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="card text-center">
-            <h3 class="font-semibold mb-2">Backend</h3>
-            <p class="text-sm text-slate-600 dark:text-slate-400">Python, FastAPI, Node.js</p>
-          </div>
-          <div class="card text-center">
-            <h3 class="font-semibold mb-2">ML/AI</h3>
-            <p class="text-sm text-slate-600 dark:text-slate-400">PyTorch, Streamlit, NLP</p>
-          </div>
-          <div class="card text-center">
-            <h3 class="font-semibold mb-2">DevOps</h3>
-            <p class="text-sm text-slate-600 dark:text-slate-400">Docker, GCP, CI/CD</p>
+          
+          <div class="reveal reveal-delay-2 card-neon">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-lg bg-neon-cyan/10 border border-neon-cyan/20 flex items-center justify-center flex-shrink-0">
+                <span class="text-lg font-heading font-bold text-neon-cyan">TU</span>
+              </div>
+              <div>
+                <h3 class="font-heading font-semibold text-text-bright">Trine University</h3>
+                <p class="text-sm text-muted mt-1">B.S. Software Engineering & Mathematics</p>
+                <div class="flex items-center gap-3 mt-2 text-xs text-muted">
+                  <span>Dec 2021</span>
+                  <span>Angola, IN</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
-    
-    <!-- Featured Projects Section -->
-    <section class="py-20 px-4">
-      <div class="max-w-7xl mx-auto">
-        <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Featured Projects</h2>
-        <div class="grid md:grid-cols-3 gap-8">
-          <p class="text-center text-slate-600 dark:text-slate-400 col-span-full">
-            Projects coming soon...
+
+    <!-- CTA Section -->
+    <section class="py-20 md:py-28">
+      <div class="section-container text-center">
+        <div class="reveal card-neon max-w-2xl mx-auto py-12 px-8">
+          <h2 class="text-2xl md:text-3xl font-heading font-bold mb-4">
+            Let's <span class="text-gradient-cyan">Build</span> Something
+          </h2>
+          <p class="text-muted mb-8 max-w-md mx-auto">
+            Interested in collaborating on ML research, full-stack systems, or production AI? I'd love to hear from you.
           </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/contact" class="btn-neon-fill">Get in Touch</a>
+            <a href="https://github.com/dhairyamishra" target="_blank" rel="noopener noreferrer" class="btn-neon">
+              <svg class="inline-block w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+              View GitHub
+            </a>
+          </div>
         </div>
       </div>
     </section>
   </main>
-  
-  <!-- Footer -->
-  <footer class="py-8 px-4 border-t border-slate-200 dark:border-slate-800">
-    <div class="max-w-7xl mx-auto text-center text-slate-600 dark:text-slate-400">
-      <p>&copy; 2025 Your Name. All rights reserved.</p>
-    </div>
-  </footer>
+
+  <Footer />
 </Layout>

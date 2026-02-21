@@ -4,40 +4,187 @@
 
 @layer base {
   :root {
-    --color-primary: 59 130 246; /* blue-500 */
-    --color-secondary: 139 92 246; /* violet-500 */
-    --color-accent: 236 72 153; /* pink-500 */
-    --color-background: 255 255 255;
-    --color-text: 15 23 42; /* slate-900 */
+    --neon-cyan: #00f0ff;
+    --neon-magenta: #ff00e5;
+    --neon-violet: #8b5cf6;
+    --neon-lime: #39ff14;
+    --bg-base: #0a0a0f;
+    --bg-surface: #12121a;
+    --bg-surface-light: #1a1a2e;
+    --text-primary: #e0e0ff;
+    --text-muted: #8888aa;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --color-background: 15 23 42; /* slate-900 */
-      --color-text: 248 250 252; /* slate-50 */
-    }
+  html {
+    scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50;
+    @apply bg-base text-text font-body;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(0,240,255,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 80%, rgba(255,0,229,0.04) 0%, transparent 50%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: rgba(0, 240, 255, 0.25);
+    color: #f0f0ff;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0a0a0f;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 240, 255, 0.2);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 240, 255, 0.4);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+
+  a {
     @apply transition-colors duration-200;
-    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    html { scroll-behavior: auto; }
   }
 }
 
 @layer components {
-  .btn-primary {
-    @apply px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg;
-    @apply transition-colors duration-200 font-medium;
+  .btn-neon {
+    @apply relative px-6 py-3 rounded-lg font-medium font-heading tracking-wide;
+    @apply border border-neon-cyan/40 text-neon-cyan;
+    @apply hover:border-neon-cyan hover:shadow-neon-md;
+    @apply transition-all duration-300 ease-out;
+    @apply active:scale-95;
   }
 
-  .btn-secondary {
-    @apply px-6 py-3 border-2 border-blue-500 text-blue-500 hover:bg-blue-50;
-    @apply dark:hover:bg-blue-950 rounded-lg transition-colors duration-200 font-medium;
+  .btn-neon-fill {
+    @apply relative px-6 py-3 rounded-lg font-medium font-heading tracking-wide;
+    @apply bg-gradient-to-r from-neon-cyan/20 to-neon-violet/20;
+    @apply border border-neon-cyan/40 text-neon-cyan;
+    @apply hover:from-neon-cyan/30 hover:to-neon-violet/30;
+    @apply hover:border-neon-cyan hover:shadow-neon-md;
+    @apply transition-all duration-300 ease-out;
+    @apply active:scale-95;
   }
 
-  .card {
-    @apply bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6;
-    @apply border border-slate-200 dark:border-slate-700;
+  .btn-neon-magenta {
+    @apply relative px-6 py-3 rounded-lg font-medium font-heading tracking-wide;
+    @apply border border-neon-magenta/40 text-neon-magenta;
+    @apply hover:border-neon-magenta hover:shadow-neon-magenta-md;
+    @apply transition-all duration-300 ease-out;
+    @apply active:scale-95;
   }
+
+  .card-neon {
+    @apply relative rounded-xl p-6;
+    @apply bg-surface/80 backdrop-blur-sm;
+    @apply border border-white/5;
+    @apply hover:border-neon-cyan/20 hover:shadow-neon-sm;
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .card-neon-interactive {
+    @apply card-neon;
+    @apply hover:bg-surface-light/80 hover:-translate-y-1;
+    @apply cursor-pointer;
+  }
+
+  .badge-neon {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+    @apply bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/20;
+  }
+
+  .badge-neon-violet {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+    @apply bg-neon-violet/10 text-neon-violet border border-neon-violet/20;
+  }
+
+  .badge-neon-magenta {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+    @apply bg-neon-magenta/10 text-neon-magenta border border-neon-magenta/20;
+  }
+
+  .divider-neon {
+    @apply w-full h-px;
+    background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+    opacity: 0.3;
+  }
+
+  .divider-neon-animated {
+    @apply w-full h-px;
+    background: linear-gradient(90deg, transparent, var(--neon-cyan), var(--neon-violet), transparent);
+    background-size: 200% 100%;
+    animation: thread-flow 3s linear infinite;
+    opacity: 0.4;
+  }
+
+  .link-neon {
+    @apply text-neon-cyan/80 hover:text-neon-cyan;
+    @apply underline decoration-neon-cyan/20 underline-offset-4;
+    @apply hover:decoration-neon-cyan/60;
+    @apply transition-all duration-200;
+  }
+
+  .text-gradient-neon {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #00f0ff, #8b5cf6, #ff00e5);
+  }
+
+  .text-gradient-cyan {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #00f0ff, #8b5cf6);
+  }
+
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .neon-glow-text {
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 40px rgba(0, 240, 255, 0.2);
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(0,240,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,240,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+  .reveal-delay-5 { transition-delay: 0.5s; }
 }

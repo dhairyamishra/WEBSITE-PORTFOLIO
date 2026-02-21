@@ -1,0 +1,190 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navigation from '../../components/Navigation.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+
+const allProjects = await getCollection('projects');
+const related = allProjects
+  .filter(p => p.slug !== project.slug && p.data.category === project.data.category)
+  .slice(0, 2);
+
+const categoryLabels: Record<string, string> = {
+  'research': 'Research',
+  'ml-ai': 'ML / AI',
+  'full-stack': 'Full-Stack',
+  'devops': 'DevOps',
+  'open-source': 'Open Source',
+};
+---
+
+<Layout title={`${project.data.title} — Dhairya Mishra`} description={project.data.description}>
+  <Navigation />
+  
+  <main id="main-content" class="py-20 md:py-28">
+    <article class="section-container">
+      <!-- Back link -->
+      <a href="/projects" class="inline-flex items-center text-sm text-muted hover:text-neon-cyan transition-colors mb-8 font-mono">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
+        Back to Projects
+      </a>
+
+      <!-- Header -->
+      <header class="max-w-3xl mb-12">
+        <div class="flex flex-wrap items-center gap-3 mb-4">
+          <span class="badge-neon">{categoryLabels[project.data.category] || project.data.category}</span>
+          <span class="text-xs text-muted font-mono">{project.data.date}</span>
+          {project.data.featured && (
+            <span class="badge-neon-violet">Featured</span>
+          )}
+        </div>
+        
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-heading font-bold mb-4 text-text-bright">
+          {project.data.title}
+        </h1>
+        
+        <p class="text-lg text-muted-light leading-relaxed mb-6">
+          {project.data.description}
+        </p>
+
+        <!-- Metric highlight -->
+        {project.data.metric && (
+          <div class="inline-flex items-center gap-3 card-neon px-5 py-3 mb-6">
+            <span class="text-2xl font-heading font-bold text-neon-cyan">{project.data.metric}</span>
+            {project.data.metricLabel && <span class="text-sm text-muted">{project.data.metricLabel}</span>}
+          </div>
+        )}
+
+        <!-- Links -->
+        <div class="flex flex-wrap gap-3">
+          {project.data.github && (
+            <a href={project.data.github} target="_blank" rel="noopener noreferrer" class="btn-neon text-sm inline-flex items-center gap-2">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+              GitHub
+            </a>
+          )}
+          {project.data.liveUrl && (
+            <a href={project.data.liveUrl} target="_blank" rel="noopener noreferrer" class="btn-neon-fill text-sm inline-flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+              Live Demo
+            </a>
+          )}
+          {project.data.paperUrl && (
+            <a href={project.data.paperUrl} target="_blank" rel="noopener noreferrer" class="btn-neon-magenta text-sm inline-flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
+              Paper
+            </a>
+          )}
+        </div>
+
+        <!-- Tags -->
+        <div class="flex flex-wrap gap-2 mt-6">
+          {project.data.tags.map(tag => (
+            <span class="badge-neon text-[10px]">{tag}</span>
+          ))}
+        </div>
+      </header>
+
+      <div class="divider-neon mb-12"></div>
+
+      <!-- Markdown Content -->
+      <div class="max-w-3xl prose-neon">
+        <Content />
+      </div>
+
+      <!-- Related Projects -->
+      {related.length > 0 && (
+        <div class="mt-20">
+          <div class="divider-neon-animated mb-12"></div>
+          <h2 class="text-2xl font-heading font-bold mb-8 text-center">
+            Related <span class="text-gradient-cyan">Projects</span>
+          </h2>
+          <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            {related.map(rel => (
+              <a href={`/projects/${rel.slug}`} class="group card-neon-interactive flex flex-col">
+                <div class="h-1 w-full rounded-t-xl bg-gradient-to-r from-neon-cyan via-neon-violet to-neon-magenta mb-3 opacity-40 group-hover:opacity-100 transition-opacity"></div>
+                <span class="badge-neon text-[10px] w-fit mb-2">{categoryLabels[rel.data.category] || rel.data.category}</span>
+                <h3 class="text-base font-heading font-semibold text-text-bright group-hover:text-neon-cyan transition-colors mb-1">{rel.data.title}</h3>
+                <p class="text-xs text-muted leading-relaxed">{rel.data.description}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </article>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style is:global>
+  .prose-neon h2 {
+    @apply text-2xl font-heading font-bold text-text-bright mt-10 mb-4;
+  }
+  .prose-neon h3 {
+    @apply text-xl font-heading font-semibold text-text-bright mt-8 mb-3;
+  }
+  .prose-neon p {
+    @apply text-sm text-muted-light leading-relaxed mb-4;
+  }
+  .prose-neon ul {
+    @apply space-y-2 mb-6;
+  }
+  .prose-neon li {
+    @apply text-sm text-muted-light leading-relaxed pl-4 relative;
+  }
+  .prose-neon li::before {
+    content: '';
+    @apply absolute left-0 top-2.5 w-1.5 h-1.5 rounded-full bg-neon-cyan/50;
+  }
+  .prose-neon ol {
+    @apply space-y-2 mb-6 list-decimal list-inside;
+  }
+  .prose-neon ol li {
+    @apply pl-0;
+  }
+  .prose-neon ol li::before {
+    content: none;
+  }
+  .prose-neon strong {
+    @apply text-text-bright font-semibold;
+  }
+  .prose-neon a {
+    @apply text-neon-cyan/80 hover:text-neon-cyan underline decoration-neon-cyan/20 underline-offset-4 hover:decoration-neon-cyan/60 transition-all;
+  }
+  .prose-neon code {
+    @apply text-neon-magenta bg-neon-magenta/10 px-1.5 py-0.5 rounded text-xs font-mono;
+  }
+  .prose-neon pre {
+    @apply bg-surface border border-white/5 rounded-lg p-4 mb-6 overflow-x-auto;
+  }
+  .prose-neon pre code {
+    @apply bg-transparent text-text p-0;
+  }
+  .prose-neon table {
+    @apply w-full mb-6 text-sm;
+  }
+  .prose-neon thead th {
+    @apply text-left text-neon-cyan/80 font-heading font-semibold py-2 px-3 border-b border-white/10;
+  }
+  .prose-neon tbody td {
+    @apply py-2 px-3 text-muted-light border-b border-white/5;
+  }
+  .prose-neon hr {
+    @apply border-white/5 my-8;
+  }
+  .prose-neon blockquote {
+    @apply border-l-2 border-neon-cyan/30 pl-4 italic text-muted my-4;
+  }
+</style>

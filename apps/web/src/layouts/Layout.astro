@@ -2,19 +2,22 @@
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string;
 }
 
-const { title, description = "Full-stack developer and ML enthusiast" } = Astro.props;
+const { title, description = "Software Engineer building AI/ML systems and full-stack platforms", ogImage } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const siteName = "Dhairya Mishra";
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#0a0a0f" />
     
     <!-- SEO -->
     <title>{title}</title>
@@ -26,19 +29,59 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Dhairya Mishra",
+      "url": canonicalURL.origin,
+      "jobTitle": "Software Engineer",
+      "alumniOf": [
+        { "@type": "CollegeOrUniversity", "name": "New York University - Courant" },
+        { "@type": "CollegeOrUniversity", "name": "Trine University" }
+      ],
+      "sameAs": [
+        "https://linkedin.com/in/dhairya-mishra/",
+        "https://github.com/dhairyamishra"
+      ]
+    })} />
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   </head>
-  <body class="font-sans">
+  <body class="font-body antialiased">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-surface focus:text-neon-cyan focus:rounded-lg focus:border focus:border-neon-cyan/40">
+      Skip to content
+    </a>
     <slot />
+
+    <!-- Scroll reveal observer -->
+    <script>
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+      document.addEventListener('astro:after-swap', () => {
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+      });
+    </script>
   </body>
 </html>
 
