@@ -77,6 +77,5 @@ Workflow: `.github/workflows/deploy.yml`
 
 ## Contact
 
-- **Email:** dpm8739@nyu.edu
 - **LinkedIn:** [dhairya-mishra](https://linkedin.com/in/dhairya-mishra/)
 - **GitHub:** [dhairyamishra](https://github.com/dhairyamishra)
