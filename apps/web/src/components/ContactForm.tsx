@@ -32,21 +32,23 @@ export default function ContactForm() {
     setErrorMessage('');
     
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          access_key: 'YOUR_WEB3FORMS_ACCESS_KEY', // Get your free key at https://web3forms.com
           name: formData.name,
           email: formData.email,
           message: formData.message,
+          botcheck: formData.honeypot,
         }),
       });
       
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.detail || 'Failed to send message');
+      const result = await response.json();
+      if (!result.success) {
+        throw new Error(result.message || 'Failed to send message');
       }
       
       setStatus('success');

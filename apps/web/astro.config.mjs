@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://yourdomain.com', // Update with your actual domain
-  output: 'static', // CRITICAL: Static output for nginx deployment
+  site: 'https://dhairyamishra.github.io',
+  output: 'static',
   integrations: [react(), tailwind(), sitemap()],
 });
