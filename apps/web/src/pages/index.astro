@@ -5,6 +5,8 @@ import Footer from '../components/Footer.astro';
 import BrandLogo from '../components/BrandLogo.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { getCollection } from 'astro:content';
+import { skills } from '../data/skills';
+import { education } from '../data/education';
 
 const allProjects = await getCollection('projects');
 const featuredProjects = allProjects
@@ -15,17 +17,8 @@ const featuredProjects = allProjects
 const allExperience = await getCollection('experience');
 const experience = allExperience.sort((a, b) => a.data.order - b.data.order);
 
-const skills = [
-  { category: 'Languages', items: ['Python', 'TypeScript', 'JavaScript', 'Java', 'C++', 'SQL', 'HTML/CSS'], color: 'rose' },
-  { category: 'ML / AI', items: ['PyTorch', 'TensorFlow', 'Hugging Face', 'scikit-learn', 'OpenCV', 'RAG', 'ChromaDB', 'FAISS', 'wandb'], color: 'gold' },
-  { category: 'Cloud & DevOps', items: ['EC2', 'S3', 'Lambda', 'GKE', 'Docker', 'Kubernetes', 'Terraform', 'GitHub Actions', 'Jenkins', 'ArgoCD'], color: 'violet' },
-  { category: 'Frameworks', items: ['FastAPI', 'React', 'Astro', 'Vite', 'TailwindCSS', 'Streamlit', 'Zustand', 'React Flow'], color: 'rose' },
-  { category: 'Data & Storage', items: ['PostgreSQL', 'MongoDB', 'MySQL', 'Pandas', 'NumPy', 'Spark', 'HDFS', 'REST APIs'], color: 'gold' },
-  { category: 'Testing & Observability', items: ['OpenTelemetry', 'Grafana', 'Prometheus', 'Playwright', 'pytest', 'Pydantic'], color: 'violet' },
-];
-
 const stats = [
-  { value: '4+', label: 'Years Experience' },
+  { value: '6+', label: 'Years Experience' },
   { value: '8+', label: 'Projects Shipped' },
   { value: 'NYU', label: 'Courant M.S. CS' },
   { value: 'ICML', label: '2026 Submission' },
@@ -81,8 +74,8 @@ const companyBrand: Record<string, string> = {
         </div>
         
         <p class="text-lg md:text-xl text-muted-light max-w-2xl mx-auto mb-10 leading-relaxed">
-          Building AI/ML production systems and full-stack platforms. 
-          4+ years shipping computer vision, NLP, and cloud-native services at scale.
+          Building and deploying AI/ML production systems at scale — multimodal pipelines, LLM tooling, and distributed data infrastructure. 
+          6+ years shipping computer vision, NLP, and cloud-native services.
         </p>
         
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -251,38 +244,25 @@ const companyBrand: Record<string, string> = {
         </div>
         
         <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-          <div class="reveal reveal-delay-1 card-neon group">
-            <div class="flex items-start gap-4">
-              <div class="w-12 h-12 rounded-lg bg-neon-violet/10 border border-neon-violet/20 flex items-center justify-center flex-shrink-0">
-                <BrandLogo brand="nyu" size="lg" />
-              </div>
-              <div>
-                <h3 class="font-heading font-semibold text-text-bright">New York University</h3>
-                <p class="text-sm text-neon-rose/70">Courant Institute</p>
-                <p class="text-sm text-muted mt-1">M.S. Computer Science (AI)</p>
-                <div class="flex items-center gap-3 mt-2 text-xs text-muted">
-                  <span>May 2026</span>
-                  <span class="text-neon-rose">GPA: 3.7</span>
+          {education.map((edu, i) => (
+            <div class={`reveal reveal-delay-${i + 1} card-neon group`}>
+              <div class="flex items-start gap-4">
+                <div class={`w-12 h-12 rounded-lg ${edu.brandBgClass} border flex items-center justify-center flex-shrink-0`}>
+                  <BrandLogo brand={edu.brand} size="lg" />
+                </div>
+                <div>
+                  <h3 class="font-heading font-semibold text-text-bright">{edu.institution}</h3>
+                  {edu.subtitle && <p class="text-sm text-neon-rose/70">{edu.subtitle}</p>}
+                  <p class="text-sm text-muted mt-1">{edu.degree}</p>
+                  <div class="flex items-center gap-3 mt-2 text-xs text-muted">
+                    <span>{edu.date}</span>
+                    {edu.gpa && <span class="text-neon-rose">GPA: {edu.gpa}</span>}
+                    {edu.location && <span>{edu.location}</span>}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          
-          <div class="reveal reveal-delay-2 card-neon group">
-            <div class="flex items-start gap-4">
-              <div class="w-12 h-12 rounded-lg bg-neon-rose/10 border border-neon-rose/20 flex items-center justify-center flex-shrink-0">
-                <BrandLogo brand="trine" size="lg" />
-              </div>
-              <div>
-                <h3 class="font-heading font-semibold text-text-bright">Trine University</h3>
-                <p class="text-sm text-muted mt-1">B.S. Software Engineering & Mathematics</p>
-                <div class="flex items-center gap-3 mt-2 text-xs text-muted">
-                  <span>Dec 2021</span>
-                  <span>Angola, IN</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

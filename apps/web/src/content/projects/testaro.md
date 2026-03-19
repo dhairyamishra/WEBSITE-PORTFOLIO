@@ -5,7 +5,7 @@ date: "2023-10"
 tags: ["Accessibility", "Node.js", "CI/CD", "Playwright", "ACM"]
 featured: false
 category: "open-source"
-paperUrl: "#"
+paperUrl: "https://arxiv.org/abs/2309.10167"
 metric: "ACM"
 metricLabel: "ASSETS 2023"
 ---
