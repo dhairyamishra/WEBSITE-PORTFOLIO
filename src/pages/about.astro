@@ -3,154 +3,142 @@ import Layout from '../layouts/Layout.astro';
 import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
 import BrandLogo from '../components/BrandLogo.astro';
-import { getCollection } from 'astro:content';
-import { skills } from '../data/skills';
 import { education } from '../data/education';
 import { publications } from '../data/publications';
 
-const allExperience = await getCollection('experience');
-const experience = allExperience.sort((a, b) => a.data.order - b.data.order);
-
-const companyBrand: Record<string, string> = {
-  'CVS Health': 'cvs',
-  'Aetna Health': 'aetna',
-  'Evidenza': 'evidenza',
-};
 ---
 
-<Layout title="About — Dhairya Mishra" description="Software Engineer with 6+ years building AI/ML production systems. NYU Courant M.S. CS (AI).">
+<Layout title="About — Dhairya Mishra" description="My story, engineering philosophy, and research background.">
   <Navigation />
   
   <main id="main-content" class="py-20 md:py-28">
-    <!-- Hero -->
-    <section class="section-container mb-20">
-      <div class="max-w-4xl flex flex-col md:flex-row md:items-center md:gap-12">
-        <div class="flex-shrink-0 mb-8 md:mb-0 md:order-2">
+    <!-- Hero & Introduction -->
+    <section class="section-container mb-16 relative">
+      <div class="absolute top-0 right-0 w-64 h-64 bg-neon-rose/5 rounded-full blur-3xl -z-10"></div>
+      
+      <div class="max-w-4xl flex flex-col md:flex-row md:items-center md:gap-16">
+        <div class="flex-shrink-0 mb-10 md:mb-0 md:order-2">
           <img
             src="/profile.jpg"
             alt="Dhairya Mishra"
-            class="w-48 h-48 md:w-56 md:h-56 rounded-2xl object-cover border-2 border-neon-rose/30 shadow-[0_0_25px_rgba(212,80,96,0.15)] mx-auto"
+            class="w-56 h-56 md:w-72 md:h-72 rounded-xl object-cover border-2 border-neon-rose/20 shadow-[0_0_30px_rgba(212,80,96,0.15)] mx-auto transition-transform duration-300 hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(212,80,96,0.3)]"
           />
         </div>
         <div class="flex-1">
-          <p class="text-neon-rose font-mono text-sm tracking-widest uppercase mb-4 animate-fade-in">About Me</p>
-          <h1 class="text-4xl md:text-5xl font-heading font-bold mb-6">
-            <span class="text-gradient-neon">Software Engineer</span>
-            <br />
-            <span class="text-text-bright">& ML Researcher</span>
+          <p class="text-neon-rose font-mono text-sm tracking-widest uppercase mb-4 animate-fade-in">My Story</p>
+          <h1 class="text-4xl md:text-5xl font-heading font-bold mb-6 leading-tight">
+            Building systems that <span class="text-gradient-neon">learn</span> and <span class="text-gradient-rose">scale</span>.
           </h1>
-          <p class="text-lg text-muted-light leading-relaxed mb-4">
-            Software Engineer with 6+ years of experience building and deploying AI/ML production systems at scale — multimodal pipelines, LLM tooling, and distributed data infrastructure serving millions. Skilled in computer vision, NLP, cloud automation, CI/CD, and reliability-oriented orchestration, with hands-on big-data processing for large-scale ETL and backfills.
-          </p>
-          <p class="text-lg text-muted-light leading-relaxed">
-            Co-author on peer-reviewed multi-agent video world model research at <span class="text-neon-rose">NYU Courant</span> (ICML 2026 submission).
-          </p>
+          <div class="space-y-4 text-base md:text-lg text-muted-light leading-relaxed font-body">
+            <p>
+              I'm Dhairya, a Software Engineer and ML Researcher deeply fascinated by the intersection of distributed computing and artificial intelligence. My journey started with a simple curiosity about how machines understand the world, which eventually led me to NYU Courant to dive deep into AI.
+            </p>
+            <p>
+              Over the last 6+ years, I've had the privilege of building pipelines that serve millions at companies like CVS Health and Aetna. But beyond the sheer scale, what I truly care about is <strong>reliability and impact</strong>. I believe that the best ML architectures are those invisible to the user—quietly fast, undeniably robust, and gracefully degrading when the unexpected happens.
+            </p>
+            <p>
+              When I'm not orchestrating cloud-native backfills or fine-tuning language models, you can find me exploring new coffee shops, reading up on the latest multi-agent world models, or simply walking my dog while thinking through an architecture problem.
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
     <div class="divider-neon-animated"></div>
 
-    <!-- Experience -->
-    <section class="section-container py-20 md:py-28">
-      <div class="reveal text-center mb-14">
-        <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">
-          Professional <span class="text-gradient-rose">Experience</span>
-        </h2>
-      </div>
-      
-      <div class="relative max-w-3xl mx-auto">
-        <div class="absolute left-4 md:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-neon-rose/40 via-neon-violet/30 to-transparent"></div>
+    <!-- Engineering Philosophy -->
+    <section class="section-container py-20">
+      <div class="max-w-4xl mx-auto">
+        <div class="reveal text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">
+            Engineering <span class="text-gradient-rose">Philosophy</span>
+          </h2>
+          <p class="text-muted text-lg">Principles that guide my day-to-day work.</p>
+        </div>
         
-        {experience.map((exp, i) => (
-          <div class={`reveal reveal-delay-${i + 1} relative pl-12 md:pl-20 pb-12 last:pb-0`}>
-            <div class="absolute left-[11px] md:left-[27px] top-1 w-3 h-3 rounded-full bg-neon-rose shadow-neon-sm border-2 border-base"></div>
-            
-            <div class="card-neon group">
-              <div class="flex items-start gap-3 mb-2">
-                {companyBrand[exp.data.company] && (
-                  <div class="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
-                    <BrandLogo brand={companyBrand[exp.data.company]} size="sm" />
-                  </div>
-                )}
-                <div class="flex-1">
-                  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <h3 class="text-lg font-heading font-semibold text-text-bright">{exp.data.role}</h3>
-                    <span class="text-xs text-muted font-mono">{exp.data.startDate} — {exp.data.endDate}</span>
-                  </div>
-                  <p class="text-sm text-neon-rose/70">{exp.data.company} &middot; {exp.data.location}</p>
-                </div>
-              </div>
-              
-              <div class="space-y-2">
-                {(exp.body || '').split('\n').filter(line => line.trim().startsWith('-')).map(line => (
-                  <p class="text-sm text-muted leading-relaxed pl-3 border-l border-white/5">
-                    {line.trim().slice(2)}
-                  </p>
-                ))}
-              </div>
-            </div>
+        <div class="grid gap-8 md:grid-cols-2">
+          <div class="card-neon reveal reveal-delay-1">
+            <h3 class="text-xl font-heading font-bold text-text-bright mb-3 flex items-center gap-3">
+              <span class="flex items-center justify-center w-8 h-8 rounded-full bg-neon-rose/10 text-neon-rose text-sm font-mono border border-neon-rose/20">01</span>
+              Empathy for the User
+            </h3>
+            <p class="text-muted leading-relaxed">
+              Every millisecond of latency or skewed prediction is a degraded experience for someone. I build with an empathy-first mindset, ensuring the end-user feels the magic of AI without the friction.
+            </p>
           </div>
-        ))}
+          
+          <div class="card-neon reveal reveal-delay-2">
+            <h3 class="text-xl font-heading font-bold text-text-bright mb-3 flex items-center gap-3">
+              <span class="flex items-center justify-center w-8 h-8 rounded-full bg-neon-gold/10 text-neon-gold text-sm font-mono border border-neon-gold/20">02</span>
+              Pragmatism over Hype
+            </h3>
+            <p class="text-muted leading-relaxed">
+              While I love experimenting with state-of-the-art models, production demands stability. I prefer robust, well-tested architectures that deliver consistent value over the newest, untested paradigm.
+            </p>
+          </div>
+          
+          <div class="card-neon reveal reveal-delay-3">
+            <h3 class="text-xl font-heading font-bold text-text-bright mb-3 flex items-center gap-3">
+              <span class="flex items-center justify-center w-8 h-8 rounded-full bg-neon-violet/10 text-neon-violet text-sm font-mono border border-neon-violet/20">03</span>
+              Observability is a Feature
+            </h3>
+            <p class="text-muted leading-relaxed">
+              If it isn't monitored, it isn't in production. I embed telemetry, structured logging, and robust alerting from day one, treating observability as a core requirement rather than an afterthought.
+            </p>
+          </div>
+          
+          <div class="card-neon reveal reveal-delay-4">
+            <h3 class="text-xl font-heading font-bold text-text-bright mb-3 flex items-center gap-3">
+              <span class="flex items-center justify-center w-8 h-8 rounded-full bg-neon-rose/10 text-neon-rose text-sm font-mono border border-neon-rose/20">04</span>
+              Continuous Learning
+            </h3>
+            <p class="text-muted leading-relaxed">
+              The AI landscape shifts weekly. I maintain a researcher's curiosity alongside an engineer's discipline, constantly reading papers, prototyping new ideas, and learning from past failures.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
     <div class="divider-neon-animated"></div>
 
     <!-- Publications & Talks -->
-    <section class="section-container py-20 md:py-28">
+    <section class="section-container py-20">
       <div class="reveal text-center mb-14">
         <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">
-          Publications & <span class="text-gradient-rose">Talks</span>
+          Publications & <span class="text-gradient-rose">Research</span>
         </h2>
+        <p class="text-muted max-w-2xl mx-auto text-lg">
+          I'm passionate about contributing back to the academic community. My core research interests lie in <strong>multi-agent reinforcement learning</strong>, <strong>video world models</strong>, and <strong>robust ML infrastructure</strong>.
+        </p>
       </div>
       
-      <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+      <div class="grid gap-6 max-w-3xl mx-auto">
         {publications.map((pub, i) => (
-          <div class={`reveal reveal-delay-${i + 1} card-neon group`}>
-            <div class="flex items-start gap-3 mb-3">
-              <div class="w-10 h-10 rounded-lg bg-neon-violet/10 border border-neon-violet/20 flex items-center justify-center flex-shrink-0">
-                <BrandLogo brand={pub.venueBrand} size="sm" />
+          <div class={`reveal reveal-delay-${i + 1} card-neon group relative overflow-hidden`}>
+            <!-- Subtle gradient hover effect -->
+            <div class="absolute inset-0 bg-gradient-to-r from-neon-violet/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            
+            <div class="relative z-10">
+              <div class="flex items-start gap-4 mb-3">
+                <div class="w-12 h-12 rounded-lg bg-neon-violet/10 border border-neon-violet/20 flex items-center justify-center flex-shrink-0 shadow-inner">
+                  <BrandLogo brand={pub.venueBrand} size="sm" />
+                </div>
+                <div>
+                  <h3 class="font-heading font-semibold text-text-bright text-lg leading-tight">{pub.title}</h3>
+                  <p class="text-sm text-neon-rose/80 mt-1 font-medium">{pub.venue}</p>
+                </div>
               </div>
-              <div>
-                <h3 class="font-heading font-semibold text-text-bright text-sm">{pub.title}</h3>
-                <p class="text-xs text-neon-rose/70 mt-1">{pub.venue}</p>
+              
+              <div class="mt-4 pl-16">
+                <div class="flex flex-wrap items-center gap-2 mb-3">
+                  <span class="px-2.5 py-1 text-[10px] uppercase tracking-wider font-semibold rounded-full bg-white/5 text-muted border border-white/10">{pub.role}</span>
+                  <span class="text-white/10 text-xs">|</span>
+                  <span class="text-sm text-muted">{pub.institution}</span>
+                  <span class="text-white/10 text-xs">|</span>
+                  <span class="text-sm text-muted font-mono">{pub.date}</span>
+                </div>
               </div>
-            </div>
-            <div class="flex items-center gap-3 text-xs text-muted">
-              <span>{pub.role}</span>
-              <span class="text-white/10">|</span>
-              <span>{pub.institution}</span>
-              <span class="text-white/10">|</span>
-              <span>{pub.date}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <div class="divider-neon-animated"></div>
-
-    <!-- Skills Matrix -->
-    <section class="section-container py-20 md:py-28">
-      <div class="reveal text-center mb-14">
-        <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">
-          Skills <span class="text-gradient-rose">Matrix</span>
-        </h2>
-      </div>
-      
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        {skills.map((group, i) => (
-          <div class={`reveal reveal-delay-${(i % 5) + 1} card-neon`}>
-            <h3 class="text-sm font-heading font-semibold uppercase tracking-wider mb-3 text-neon-rose">
-              {group.category}
-            </h3>
-            <div class="flex flex-wrap gap-2">
-              {group.items.map(item => (
-                <span class="text-xs px-2.5 py-1 rounded-full border bg-neon-rose/5 text-neon-rose/80 border-neon-rose/15">
-                  {item}
-                </span>
-              ))}
             </div>
           </div>
         ))}
@@ -160,10 +148,10 @@ const companyBrand: Record<string, string> = {
     <div class="divider-neon-animated"></div>
 
     <!-- Education -->
-    <section class="section-container py-20 md:py-28">
+    <section class="section-container py-20 md:pb-28">
       <div class="reveal text-center mb-14">
         <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">
-          <span class="text-gradient-rose">Education</span>
+          Academic <span class="text-gradient-rose">Background</span>
         </h2>
       </div>
       
@@ -171,16 +159,19 @@ const companyBrand: Record<string, string> = {
         {education.map((edu, i) => (
           <div class={`reveal reveal-delay-${i + 1} card-neon group`}>
             <div class="flex items-start gap-4">
-              <div class={`w-12 h-12 rounded-lg ${edu.brandBgClass} border flex items-center justify-center flex-shrink-0`}>
+              <div class={`w-14 h-14 rounded-lg flex items-center justify-center flex-shrink-0 bg-white/5 border border-white/10`}>
                 <BrandLogo brand={edu.brand} size="lg" />
               </div>
               <div>
-                <h3 class="font-heading font-semibold text-text-bright">{edu.institution}</h3>
-                {edu.subtitle && <p class="text-sm text-neon-rose/70">{edu.subtitle}</p>}
-                <p class="text-sm text-muted mt-1">{edu.degree}</p>
-                <div class="flex items-center gap-3 mt-2 text-xs text-muted">
-                  <span>{edu.date}</span>
-                  {edu.gpa && <span class="text-neon-rose">GPA: {edu.gpa}</span>}
+                <h3 class="font-heading font-semibold text-text-bright text-lg">{edu.institution}</h3>
+                {edu.subtitle && <p class="text-sm text-neon-rose/80 font-medium mb-1">{edu.subtitle}</p>}
+                <p class="text-sm text-muted">{edu.degree}</p>
+                <div class="flex items-center gap-3 mt-3 text-xs text-muted font-mono">
+                  <span class="bg-black/20 px-2 py-0.5 rounded border border-white/5">{edu.date}</span>
+                  {edu.gpa && <span class="text-neon-rose bg-neon-rose/10 px-2 py-0.5 rounded border border-neon-rose/10 flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"></path></svg>
+                    {edu.gpa}
+                  </span>}
                   {edu.location && <span>{edu.location}</span>}
                 </div>
               </div>
